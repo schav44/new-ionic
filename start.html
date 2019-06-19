@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Welcome to DView
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <form>
+    <div class="start_image">
+      <img [src]="imageSrc" alt="" [height]="imageH">
+    </div>
+
+    <div class="start_button_bar">
+      <span>
+        <button [class]="'start_button'" [id]="'btnStart'" (click)="onStart($event)">Start DView</button>
+      </span>
+    </div>
+
+  </form>
+</ion-content>

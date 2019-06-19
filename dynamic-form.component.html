@@ -1,0 +1,60 @@
+
+<!--
+<ion-header>
+  <ion-toolbar>
+    <button ion-button menuToggle start>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      {{dvmform.title.value}}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+-->
+
+
+<ion-menu [id]="dvmform.dvMenu.id" *ngIf="dvmform.dvMenu.enabled" [content]="dvmform.dvMenu.content">
+  <ion-header>
+      <ion-toolbar>
+          <ion-title> {{dvmform.title.value}}</ion-title>
+      </ion-toolbar>
+  </ion-header>  
+  <ion-content>
+      <ion-list>
+          <button ion-item *ngFor="let p of dvmform.dvMenu.content" (click)="openPage(p.value)">
+              {{p.text}}
+          </button>
+      </ion-list>
+  </ion-content>
+</ion-menu>
+
+
+<form [formGroup]="formGroup" [class]="md" (submit)="onSubmit($event);  $event.stopPropagation();">
+
+  <ion-list>
+    <!-- RENDER FORM TITLE LIKE A CONTROL ROW -->
+    <!-- <div [class]="'form_title'" (click)="showPageID();" [class]="dvmform.title.attributes.styleClass" [ngStyle]="dvmform.title.attributes.cssStyle">
+      {{dvmform.title.value}}
+    </div> -->
+   
+    <ion-item>
+      <div *ngFor="let control  of formControls" class="form-row">
+        <dynamic-form-control-comp [control]="control" [formGroup]="formGroup" 
+          (itemSelected)="receiveSelectedItem( $event)"
+          (autoSubmitInput)="onAutoSubmit( $event)" 
+          (datawedgeBarcodeReceived)="onDatawedgeBarcodeReceived()" 
+          >
+          
+        </dynamic-form-control-comp>
+
+      </div>
+    </ion-item>
+
+  </ion-list>
+  <footer #footer (buttonPressed)="onButtonPressed($event)"></footer>  
+ 
+  <div (autoSubmitInput)="onAutoSubmit( event)"></div>
+
+    
+
+</form>

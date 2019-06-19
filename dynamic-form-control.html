@@ -1,0 +1,188 @@
+<div [formGroup]="formGroup">
+
+    <div [ngSwitch]="control.type">
+
+        <!-- LABEL -->
+        <div *ngSwitchCase="'label'" [id]="control.id" [class]="control.attributes.styleClass" [ngStyle]="control.attributes.cssStyle">
+            {{control.value}}
+        </div>
+
+        <div *ngSwitchCase="'ctl_paneltext'">
+            <textarea [formControlName]="control.id" [id]="control.id" [rows]="getPanelTextRows()" [cols]="getPanelTextCols()"
+                readonly [class]="control.attributes.styleClass" [style]="control.attributes.cssStyle">
+                    {{control.value}} 
+            </textarea>
+        </div>
+
+        <!-- ctl_listbox ------------------------------------------------------------------- -->
+        <div *ngSwitchCase="'ctl_listbox'" [id]="control.id">
+
+            <select *ngSwitchCase="'ctl_listbox'" [id]="control.id" [formControlName]="control.id" ng-model="control.value"
+                [size]="control.attributes.size" [class]="control.attributes.styleClass" [ngStyle]="control.attributes.cssStyle"
+                (keypress)="onKeyPress($event, control)">
+
+                <option *ngFor="let opt of control.options" [value]="opt.value">{{opt.description}}</option>
+            </select>
+
+        </div>
+        <!-- optional list box status line-->
+        <div *ngSwitchCase="'ctl_listbox'" [id]="control.id+'_statusLine'">
+            <div *ngIf="control.attributes.statusLine.length > 0" [class]="control.attributes.statusLineClass"
+                [ngStyle]="control.attributes.statusCssStyle">
+                {{control.attributes.statusLine}}
+            </div>
+        </div>
+
+        <div *ngSwitchCase="'ctl_input'" [id]="control.id+ '_div'" [ngStyle]="control.attributes.cssStyle" [class]="control.attributes.styleClass">
+            <div [ngSwitch]="control.attributes.autofocus">
+                <ion-item *ngSwitchCase="'0'">
+                    <ion-input [placeholder]="control.attributes.placeholder" [formControlName]="control.id" [id]="control.id"
+                        [class]="control.attributes.styleClass" [style]="control.attributes.cssStyle" [maxlength]="control.attributes.maxlength"
+                        type="{{(control.attributes.validation == '0' || control.attributes.validation == '4') ? 'number' : (control.attributes.protectMode == '1' ? 'password':'text')}}"
+                        pattern="{{(control.attributes.validation == '4') ? '[0-9]*' : ''}}" [(ngModel)]="control.value"
+                        [tabindex]="control.tabindex" [disabled]="isInputDisabled( control)" (keypress)="ctl_input_onKeyPress($event, control)"
+                        (ionFocus)="onInputFieldFocus($event, control)" (ionBlur)="offInputFieldFocus($event, control)">
+                    </ion-input>
+                </ion-item>
+
+                <ion-item *ngSwitchCase="'1'">
+                    <ion-input #input1 [placeholder]="control.attributes.placeholder" [formControlName]="control.id"
+                        [id]="control.id" [class]="control.attributes.styleClass" [style]="control.attributes.cssStyle"
+                        [maxlength]="control.attributes.maxlength" type="{{(control.attributes.validation == '0' || control.attributes.validation == '4') ? 'number' : (control.attributes.protectMode == '1' ? 'password':'text')}}"
+                        pattern="{{(control.attributes.validation == '4') ? '[0-9]*' : ''}}" [(ngModel)]="control.value"
+                        [tabindex]="control.tabindex" autofocus (keypress)="ctl_input_onKeyPress($event, control)"
+                        (ionFocus)="onInputFieldFocus($event, control)" (ionBlur)="offInputFieldFocus($event, control)"
+                        [disabled]="isInputDisabled( control)">
+                    </ion-input>
+                </ion-item>
+            </div>
+        </div>
+
+
+        <!-- ctl_OnSubmitText ------------------------------------------------------------------- -->
+        <div *ngSwitchCase="'ctl_OnSubmitText'" [id]="control.id" [class]="control.attributes.styleClass" [style]="control.attributes.cssStyle">
+            {{control.value}}
+        </div>
+
+        <!-- ctl_Exception  readonly [tabindex]="-1"  -->
+        <div *ngSwitchCase="'ctl_Exception'">
+            <textarea [formControlName]="control.id" [id]="control.id" [rows]="control.attributes.rows" [cols]="control.attributes.cols"
+                readonly [class]="control.attributes.styleClass" [style]="control.attributes.cssStyle">
+                {{control.value}}    
+            </textarea>
+        </div>
+
+
+        <!-- ctl_textarea -->
+        <div *ngSwitchCase="'ctl_textarea'">
+            <textarea [formControlName]="control.id" [id]="control.id" [rows]="control.attributes.rows" [cols]="control.attributes.cols"
+                readonly [class]="control.attributes.styleClass" [style]="control.attributes.cssStyle">
+                {{control.value}} 
+            </textarea>
+        </div>
+
+        <div *ngSwitchCase="'textbox'">
+            <label>
+                {{control.label}}
+            </label>
+            <input [formControlName]="control.id" [id]="control.id" [type]="control.type" [class]="control.attributes.styleClass"
+                [style]="control.attributes.cssStyle" (keypress)="onKeyPress($event, control)">
+        </div>
+
+        <div *ngSwitchCase="'dropdown'">
+            <label>
+                {{control.label}}
+            </label>
+            <select [id]="control.id" *ngSwitchCase="'dropdown'" [formControlName]="control.id" [class]="control.attributes.styleClass"
+                [style]="control.attributes.cssStyle" (keypress)="onKeyPress($event, control)">
+                <option *ngFor="let opt of control.options" [value]="opt.id">{{opt.value}}</option>
+            </select>
+        </div>
+
+
+        <!-- ctl_grid -->
+        <div *ngSwitchCase="'ctl_grid'" [id]="control.id">
+
+            <!-- GRID HEADER SECTION Optional-->
+
+            <div [hidden]="(control.displayHeader()==false)" class="form_ctl_grid_header">
+                <ion-grid>
+                    <ion-row>
+                        <ion-col *ngFor="let headercell of control.headers" [ngStyle]="control.getHeaderColStyleByID(headercell.id)">
+                            <div [class]="headercell.styleClass">
+                                {{headercell.description}}
+                            </div>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </div>
+
+            <!-- GRID BODY SECTION -->fulllist
+            <div class="form_ctl_grid">
+                <ion-grid>
+                    <!--fixed-->
+
+                    <!-- <ion-row *ngFor="let row of control.rows" (click)="onGridRowClick(control.id, row.id, control.onRowClick( row.id) )"> -->
+                    <ion-row *ngFor="let row of control.rows">
+                        <ion-col *ngFor="let cell of row.cols" [ngStyle]="control.getStyleObjectForRowColID(row.id, cell.id)">
+                            <div [class]="cell.styleClass" (click)="onGridCellClick(control.id, row.value, cell.value)">
+                                {{cell.description}}
+                            </div>
+                        </ion-col>
+
+                    </ion-row>
+                </ion-grid>
+            </div>
+
+        </div> <!-- end of grid -->
+
+
+        <!-- ctl_fulllistbox ------------------------------------------------------------------- -->
+        <ion-list *ngSwitchCase="'ctl_fulllistbox'" [id]="control.id" [class]="control.attributes.styleClass" [ngStyle]="control.attributes.cssStyle">
+
+            <div [ngSwitch]="control.attributes.listBoxType">
+                <!--[class]="'form_ctl_fulllistbox_item'" from above-->
+                <!-- div [id]="control.id + '_xscroll'" *ngSwitchCase="'text'" style="width:1200px; overflow-x: scroll" >  -->
+                <ion-item *ngFor="let opt of control.options; let idx=index;" [id]="control.id + '_item_' +opt.value"
+                    [class]="'form_ctl_fulllistbox_item'" (click)="listSelected( $event, control, opt.value, idx )">
+                    <div [class.clicked]="opt.clicked==true" [ngStyle]="control.attributes.itemCssStyle">
+                        {{opt.description}}
+                    </div>
+                </ion-item>
+
+                <div *ngSwitchCase="'button'">
+                    <div *ngFor="let opt of control.options; let idx=index;">
+                        <button ion-button full round [id]="control.id + '_item_' +opt.value" style="border-radius:3px"
+                            (click)="listSelected( $event, control, opt.value, idx )">
+                            <!-- <ion-icon name="contact"></ion-icon> -->
+                            {{opt.description}}
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- WORKING BUTTON VERSION -->
+            <!--
+        <div *ngFor="let opt of control.options; let idx=index;">
+            <button ion-button full round [id]="control.id + '_item_' +opt.value" style="border-radius:3px" (click)="listSelected( $event, control, opt.value, idx )">
+                {{opt.description}}
+            </button>
+        </div>
+       -->
+
+        </ion-list>
+
+        <!-- optional fulllistbox status line-->
+        <div *ngSwitchCase="'ctl_fulllistbox'" [id]="control.id+'_statusLine'">
+            <div *ngIf="control.attributes.statusLine.length > 0" [class]="control.attributes.statusLineClass"
+                [ngStyle]="control.attributes.statusCssStyle">
+                {{control.attributes.statusLine}}
+            </div>
+        </div>
+
+    </div> <!-- end control type -->
+
+</div>
+
+<div style="height: 5px;"></div>
