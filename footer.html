@@ -1,0 +1,42 @@
+<!-- FOOTER BEGIN *****************************************-->
+<div></div>
+
+<!--
+    THE IONIC 3 version ion-buttons left / right is used instead of the ionic 4 slot="start" / "end" notation
+  -->
+
+<ion-footer [hidden]="!isFooterPresent()"  >
+  <div [class]="getFooterTitleClass()" [ngStyle]="getFooterTitleStyle()"> {{ getFooterTitle() }}</div>
+
+  <ion-toolbar >
+    <ion-buttons left>
+      <button [id]="'cancel'" class="footer_icon" [hidden]="!(butCancel || butBack)" (click)="onButtonPress( $event, 'cancel')">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
+
+    <span class="flex-container">
+      <button ion-button [hidden]="!butSubmit" class="footer_button" [id]="'submit'"
+        (click)="onButtonPress($event, 'submit')"> SUBMIT</button>
+      <button ion-button [hidden]="!butOK" class="footer_button" [id]="'ok'"
+        (click)="onButtonPress($event, 'ok')">OK</button>
+      <button ion-button [hidden]="!butYes" class="footer_button" [id]="'yes'"
+        (click)="onButtonPress($event, 'yes')">Yes</button>
+      <button ion-button [hidden]="!butNo" class="footer_button" [id]="'no'"
+        (click)="onButtonPress($event, 'no')">No</button>
+      <button ion-button [hidden]="!butLogout" class="footer_button" [id]="'logout'"
+        (click)="onButtonPress($event, 'logout')">Logout</button>
+    </span>
+
+    <ion-buttons right>
+      <button class="footer_icon" [hidden]="!butActionSheet" (click)="actionSheetClicked( $event)">
+        <ion-icon slot="icon-only" name="menu"></ion-icon>
+      </button>
+
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+
+
+<!-- FOOTER END   *********************************** -->
+

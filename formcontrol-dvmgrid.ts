@@ -37,6 +37,8 @@ export class Dvmgrid extends FormControlBase<string> {
     // this.mockInit()
   }
 
+
+
   mockInitHeader(nrow: number, ncol: number) {
     // init grid heheaders
     let NO_COLS = ncol

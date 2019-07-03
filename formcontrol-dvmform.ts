@@ -13,7 +13,7 @@ import { PanelTextControl } from './formcontrol-paneltext'
 import { FooterActionSheet } from './footeractionsheet';
 import { Dvmgrid } from './formcontrol-dvmgrid';
 import { Defines } from '../common/defines'
-import { PageMenu } from './page-menu'
+import { PageMenu } from "./page-menu";
 
 export class DVMForm {
 
@@ -23,8 +23,6 @@ export class DVMForm {
     dialogType: string = ''
     title: String = ''      // displayed on page banner
     filename: string = ""   // displayed when title bar is clicked
-
-    dvMenu: PageMenu = new PageMenu()
     
     // attributes for the form
     // optionally you can pass parms like:
@@ -40,6 +38,8 @@ export class DVMForm {
         classWidth : 290,
         classHeight : 300
     }
+
+    dvMenu: PageMenu = new PageMenu()
 
         // The constructor is passed a formDefinition (JSON) object
     constructor(obj) {
@@ -63,6 +63,7 @@ export class DVMForm {
      * @param obj Builds an array of Form Controls (extension/ subclasses of FormControlBase objects)
      */
     buildFromObject(obj) {
+        console.log(obj);
         let rc = true
         try {
             this.dialogid = obj.dialogid
@@ -75,18 +76,28 @@ export class DVMForm {
                 this.filename = ""
             }
 
-            this.dvMenu = obj.headerFormControls[0].PageMenu
-            this.dvMenu.id = obj.headerFormControls[0].id
-
             // get form attributes
-            // this.
-                // && obj.headerFormControls.length >0
-                // && !obj.headerFormControls[0].PageMenu )
-                // {
-                //     this.dvMenu = obj.headerFormControls[0].PageMenu
-                //     this.dvMenu.id = obj.headerFormControls[0].id
-                // }
+            this.attributes = this.getFormAttributes(obj)
 
+            this.buttons = []
+            if (obj.buttons) {
+                this.buttons = obj.buttons
+            }
+
+            // copy the action sheet from the object to the form
+            // if we have a footer control with an actionSheet attribute
+            this.actionsheet = new FooterActionSheet( obj.footerFormControls)
+
+            // copy header menu 
+            try {
+                debugger;
+                console.log(obj.headerFormControls);
+                this.dvMenu = obj.headerFormControls[0].pagemenu;
+                this.dvMenu.id = obj.headerFormControls[0].id
+            } catch(eex) {
+                console.log(eex);
+            }
+        
 
             let aFormControl: FormControlBase<any> = null
 
@@ -97,9 +108,8 @@ export class DVMForm {
                     // let index= 1
                     let renderType: string = ""
                     for (let i = 0; i < myFormControls.length; i++) {
-                        renderType = myFormControls[i].type     
-                        // convert to string
-                        // renderType = renderType.toLowerCase();
+                        renderType = myFormControls[i].type     // convert to string
+                        // renderType = renderType.toLowerCase()
 
                         // switch (myFormControls[i].type) {
                         switch (renderType) {
@@ -282,6 +292,7 @@ export class DVMForm {
         catch (ex) {
             rc = false
         }
+
         return rc
     }
 

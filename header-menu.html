@@ -1,0 +1,19 @@
+
+<ion-menu *ngIf="dvMenu"  [content]="dvMenu.content" [id]="dvMenu.id" [side]="dvMenu.side" [persistent]=dvMenu.persistent>
+
+  <ion-header>
+      <ion-toolbar>
+          <ion-title>{{dvMenu.title}}</ion-title>
+      </ion-toolbar>
+  </ion-header>
+  <ion-content>
+      <ion-list>
+          <button ion-item *ngFor="let item of dvMenu.content" (click)="openPage(item.value)">
+              {{item.text}}
+          </button>
+      </ion-list>
+  </ion-content>
+
+</ion-menu>
+
+<ion-content #mycontent></ion-content>

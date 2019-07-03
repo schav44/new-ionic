@@ -69,7 +69,6 @@ export class DynamicFormComponent {
         for (let entry of this.dvmform.formControls) {
           let formCtl: FormControl = new FormControl({ value: entry.value, disabled: false })
           this.formGroup.addControl(entry.id, formCtl)
-          
         }
       }
       else {
